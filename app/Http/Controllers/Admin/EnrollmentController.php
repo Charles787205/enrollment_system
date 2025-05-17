@@ -35,6 +35,8 @@ class EnrollmentController extends Controller
             // 'track_or_strand' => 'required|string|max:100',
             'subject' => 'nullable|string|max:255',
             'enrollment_date' => 'required|date',
+            'Sex' => 'required|in:Male,Female',
+            'DateOfBirth' => 'required|date',
         ]);
 
         Enrollment::create($validated);
@@ -66,6 +68,8 @@ class EnrollmentController extends Controller
             // 'track_or_strand' => 'required|string|max:100',
             'subject' => 'nullable|string|max:255',
             'enrollment_date' => 'required|date',
+            'Sex' => 'required|in:Male,Female',
+            'DateOfBirth' => 'required|date',
         ]);
 
         $enrollment = Enrollment::findOrFail($id);
@@ -94,6 +98,8 @@ class EnrollmentController extends Controller
             // 'track_or_strand' => $transferee->track,
             'subject' => $transferee->subject,
             'enrollment_date' => now(),
+            'Sex' => $transferee->Sex,
+            'DateOfBirth' => $transferee->DateOfBirth,
         ]);
 
         $transferee->delete();
