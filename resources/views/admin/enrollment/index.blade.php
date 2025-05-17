@@ -257,44 +257,54 @@
 
 <body>
     <div class="sidebar">
-    <h2>Admin Panel</h2>
-    <nav>
-        <a href="{{ route('admin.dashboard') }}" class="nav-link {{ Request::routeIs('admin.dashboard') ? 'active' : '' }}">
-            <i class="fas fa-tachometer-alt"></i> Dashboard
-        </a>
-        <a href="{{ route('admin.enrollment.index') }}" class="nav-link {{ Request::routeIs('admin.enrollment.index') ? 'active' : '' }}">
-            <i class="fas fa-user-check"></i> Enrollment
-        </a>
-        <a href="{{ route('admin.students.index') }}" class="nav-link {{ Request::routeIs('admin.students.index') ? 'active' : '' }}">
-            <i class="fas fa-user-graduate"></i> Old Students
-        </a>
-        <a href="{{ route('admin.transferees.index') }}" class="nav-link {{ Request::routeIs('admin.transferees.index') ? 'active' : '' }}">
-            <i class="fas fa-users"></i> Transferees
-        </a>
-        <a href="{{ route('admin.strands.index') }}" class="nav-link {{ Request::routeIs('admin.strands.index') ? 'active' : '' }}">
-            <i class="fas fa-book"></i> Strands
-        </a>
-        <a href="{{ route('admin.faculty.index') }}" class="nav-link {{ Request::routeIs('admin.faculty.index') ? 'active' : '' }}">
-            <i class="fas fa-chalkboard-teacher"></i> Faculty
-        </a>
-        <a href="{{ route('admin.sections.index') }}" class="nav-link {{ Request::routeIs('admin.sections.index') ? 'active' : '' }}">
-            <i class="fas fa-layer-group"></i> Sections
-        </a>
-        <a href="{{ route('admin.subjects.index') }}" class="nav-link {{ Request::routeIs('admin.subjects.index') ? 'active' : '' }}">
-            <i class="fas fa-book-open"></i> Subjects
-        </a>
-        <a href="{{ route('admin.profileSettings.edit') }}" class="nav-link {{ Request::routeIs('admin.admin.profile.edit') ? 'active' : '' }}">
-            <i class="fas fa-user-cog"></i> Profile Settings
-        </a>
-    </nav>
-</div>
+        <h2>Admin Panel</h2>
+        <nav>
+            <a href="{{ route('admin.dashboard') }}"
+                class="nav-link {{ Request::routeIs('admin.dashboard') ? 'active' : '' }}">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="{{ route('admin.enrollment.index') }}"
+                class="nav-link {{ Request::routeIs('admin.enrollment.index') ? 'active' : '' }}">
+                <i class="fas fa-user-check"></i> Enrollment
+            </a>
+            <a href="{{ route('admin.students.index') }}"
+                class="nav-link {{ Request::routeIs('admin.students.index') ? 'active' : '' }}">
+                <i class="fas fa-user-graduate"></i> Old Students
+            </a>
+            <a href="{{ route('admin.transferees.index') }}"
+                class="nav-link {{ Request::routeIs('admin.transferees.index') ? 'active' : '' }}">
+                <i class="fas fa-users"></i> Transferees
+            </a>
+            <a href="{{ route('admin.strands.index') }}"
+                class="nav-link {{ Request::routeIs('admin.strands.index') ? 'active' : '' }}">
+                <i class="fas fa-book"></i> Strands
+            </a>
+            <a href="{{ route('admin.faculty.index') }}"
+                class="nav-link {{ Request::routeIs('admin.faculty.index') ? 'active' : '' }}">
+                <i class="fas fa-chalkboard-teacher"></i> Faculty
+            </a>
+            <a href="{{ route('admin.sections.index') }}"
+                class="nav-link {{ Request::routeIs('admin.sections.index') ? 'active' : '' }}">
+                <i class="fas fa-layer-group"></i> Sections
+            </a>
+            <a href="{{ route('admin.subjects.index') }}"
+                class="nav-link {{ Request::routeIs('admin.subjects.index') ? 'active' : '' }}">
+                <i class="fas fa-book-open"></i> Subjects
+            </a>
+            <a href="{{ route('admin.profileSettings.edit') }}"
+                class="nav-link {{ Request::routeIs('admin.admin.profile.edit') ? 'active' : '' }}">
+                <i class="fas fa-user-cog"></i> Profile Settings
+            </a>
+        </nav>
+    </div>
 
     <div class="main-content">
         <div class="header">
             <h1>Enrollments</h1>
             <div class="header-actions">
                 <form method="GET" action="{{ route('admin.transferees.index') }}" class="search-form">
-                    <input type="text" name="search" placeholder="Search transferees..." value="{{ request('search') }}">
+                    <input type="text" name="search" placeholder="Search transferees..."
+                        value="{{ request('search') }}">
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
             </div>
@@ -308,8 +318,8 @@
                         <tr>
                             <th>ID</th>
                             <th>Full Name</th>
-                            <th>Grade Level</th>
-                            <th>Program</th>
+                            <th>Year Level</th>
+                            <th>Strand</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -318,10 +328,11 @@
                         <tr>
                             <td>{{ $transferee->id }}</td>
                             <td>{{ $transferee->full_name }}</td>
-                            <td>{{ $transferee->academic_year }}</td>
-                            <td>{{ $transferee->program }}</td>
+                            <td>{{ $transferee->year_level }}</td>
+                            <td>{{ $transferee->strand ? $transferee->strand->name : 'N/A' }}</td>
                             <td class="actions">
-                                <button onclick="openModal({{ $transferee->id }}, '{{ e($transferee->full_name) }}', '{{ $transferee->academic_year }}', '{{ $transferee->program }}', '{{ $transferee->subject }}', '{{ $transferee->email }}', '{{ $transferee->contact_number }}', '{{ $transferee->previous_school }}')">
+                                <button
+                                    onclick="openModal({{ $transferee->id }}, '{{ e($transferee->full_name) }}', '{{ $transferee->academic_year }}', '{{ $transferee->strand ? e($transferee->strand->name) : 'N/A' }}', '{{ $transferee->subject }}', '{{ $transferee->email }}', '{{ $transferee->contact_number }}', '{{ $transferee->previous_school }}')">
                                     Show Details
                                 </button>
                             </td>
@@ -349,8 +360,8 @@
             <h2>Transferee Details</h2>
             <p><strong>ID:</strong> <span id="modal-id"></span></p>
             <p><strong>Full Name:</strong> <span id="modal-name"></span></p>
-            <p><strong>Grade Level:</strong> <span id="modal-grade"></span></p>
-            <p><strong>Program:</strong> <span id="modal-program"></span></p>
+            <p><strong>Year Level:</strong> <span id="modal-grade"></span></p>
+            <p><strong>Strand:</strong> <span id="modal-program"></span></p>
             <p><strong>Email:</strong> <span id="modal-email"></span></p>
             <p><strong>Contact Number:</strong> <span id="modal-contact"></span></p>
             <p><strong>Previous School:</strong> <span id="modal-school"></span></p>
@@ -361,13 +372,13 @@
     </div>
 
     <script>
-        function openModal(id, name, grade, program, subject, email, contact, school, reportCard, goodMoral, birthCert) {
+        function openModal(id, name, grade, program, subject, email, contact_number, school, reportCard, goodMoral, birthCert) {
             document.getElementById('modal-id').textContent = id;
             document.getElementById('modal-name').textContent = name;
             document.getElementById('modal-grade').textContent = grade;
             document.getElementById('modal-program').textContent = program;
             document.getElementById('modal-email').textContent = email;
-            document.getElementById('modal-contact').textContent = contact;
+            document.getElementById('modal-contact').textContent = contact_number;
             document.getElementById('modal-school').textContent = school;
             // document.getElementById('modal-report-card').textContent = reportCard;
             // document.getElementById('modal-good-moral').textContent = goodMoral;

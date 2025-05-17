@@ -25,13 +25,28 @@ class TransfereeController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|email',
             'contact_number' => 'required|string|size:11',
+            'Sex' => 'required|string|in:Male,Female',
+            'DateOfBirth' => 'required|date',
             'street_address' => 'required|string|max:255',
+            'barangay' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'province' => 'required|string|max:255',
             'postal_code' => 'required|string|size:4',
-            'parent_name' => 'required|string|max:255',
-            'guardian_name' => 'nullable|string|max:255',
-            'parent_guardian_contact' => 'required|string|size:11',
+            'father_first_name' => 'required|string|max:255',
+            'father_middle_name' => 'nullable|string|max:255',
+            'father_last_name' => 'required|string|max:255',
+            'father_contact_number' => 'required|string|size:11',
+            'father_occupation' => 'required|string|max:255',
+            'mother_first_name' => 'required|string|max:255',
+            'mother_middle_name' => 'nullable|string|max:255',
+            'mother_last_name' => 'required|string|max:255',
+            'mother_contact_number' => 'required|string|size:11',
+            'mother_occupation' => 'required|string|max:255',
+            'guardian_first_name' => 'nullable|string|max:255',
+            'guardian_middle_name' => 'nullable|string|max:255',
+            'guardian_last_name' => 'nullable|string|max:255',
+            'guardian_contact_number' => 'nullable|string|size:11',
+            'guardian_relationship' => 'nullable|string|max:255',
             'previous_school' => 'required|string',
             'grade_level' => 'required|string',
             'strand_id' => 'required|exists:strands,id',
@@ -40,12 +55,12 @@ class TransfereeController extends Controller
             'good_moral_path' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'birth_certificate_path' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
-    
+
         // Handle file uploads and store them in the 'public' storage disk under 'documents' folder
         $reportCardPath = $request->file('report_card_path')->store('documents', 'public');
         $goodMoralPath = $request->file('good_moral_path')->store('documents', 'public');
         $birthCertificatePath = $request->file('birth_certificate_path')->store('documents', 'public');
-    
+
         // Create student with type='transferee'
         $student = Student::create([
             'type' => 'transferee',
@@ -67,16 +82,29 @@ class TransfereeController extends Controller
         StudentDetail::create([
             'student_id' => $student->id,
             'street' => $request->street_address,
+            'barangay' => $request->barangay,
             'city' => $request->city,
             'province' => $request->province,
             'postal_code' => $request->postal_code,
-            'father_first_name' => explode(' ', $request->parent_name)[0] ?? null,
-            'father_last_name' => count(explode(' ', $request->parent_name)) > 1 ? explode(' ', $request->parent_name)[1] : null,
-            'guardian_first_name' => $request->guardian_name ? explode(' ', $request->guardian_name)[0] : null,
-            'guardian_last_name' => $request->guardian_name && count(explode(' ', $request->guardian_name)) > 1 ? explode(' ', $request->guardian_name)[1] : null,
-            'guardian_contact_number' => $request->parent_guardian_contact,
+            'gender' => $request->Sex,
+            'date_of_birth' => $request->DateOfBirth,
+            'father_first_name' => $request->father_first_name,
+            'father_middle_name' => $request->father_middle_name,
+            'father_last_name' => $request->father_last_name,
+            'father_contact_number' => $request->father_contact_number,
+            'father_occupation' => $request->father_occupation,
+            'mother_first_name' => $request->mother_first_name,
+            'mother_middle_name' => $request->mother_middle_name,
+            'mother_last_name' => $request->mother_last_name,
+            'mother_contact_number' => $request->mother_contact_number,
+            'mother_occupation' => $request->mother_occupation,
+            'guardian_first_name' => $request->guardian_first_name,
+            'guardian_middle_name' => $request->guardian_middle_name,
+            'guardian_last_name' => $request->guardian_last_name,
+            'guardian_contact_number' => $request->guardian_contact_number,
+            'guardian_relationship' => $request->guardian_relationship,
         ]);
-    
+
         return redirect()->back()->with('success', 'Your application has been submitted successfully!');
     }
     

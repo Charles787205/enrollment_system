@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Enrollment;
 use App\Models\Strand;
 use Illuminate\Http\Request;
-use App\Models\Transferee;
+use App\Models\Student;
 
 class EnrollmentController extends Controller
 {
@@ -14,7 +14,7 @@ class EnrollmentController extends Controller
     public function index()
     {
         $enrollments = Enrollment::latest()->paginate(10);
-        $transferees = Transferee::where('status', 'Enrolled')->get();
+        $transferees = Student::where('type', 'transferee')->where('status', 'ENROLLED')->get();
 
         return view('admin.enrollment.index', compact('enrollments', 'transferees'));
     }
@@ -86,7 +86,7 @@ class EnrollmentController extends Controller
     // Accept and transfer a transferee to the enrollment list
     public function acceptTransferee($id)
     {
-        $transferee = Transferee::findOrFail($id);
+        $transferee = Student::findOrFail($id);
 
         Enrollment::create([
             'full_name' => $transferee->full_name,

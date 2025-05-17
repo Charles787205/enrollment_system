@@ -329,6 +329,7 @@
                         <th>Email</th>
                         <th>Previous School</th>
                         <th>Strand</th>
+                        <th>Year Level</th>
                         <th>Documents</th>
                         <th>Date Applied</th>
                         <th>Status</th>
@@ -343,6 +344,7 @@
                         <td>{{ $transferee->email }}</td>
                         <td>{{ $transferee->previous_school }}</td>
                         <td>{{ $transferee->strand ? $transferee->strand->name : 'N/A' }}</td>
+                        <td>{{ $transferee->year_level }}</td>
                         <td>
                             <a href="#" class="document-link"
                                 data-image="{{ asset('storage/' . $transferee->report_card_path) }}">
@@ -375,7 +377,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="text-center">No transferee applications found</td>
+                        <td colspan="9" class="text-center">No transferee applications found</td>
                     </tr>
                     @endforelse
                 </tbody>

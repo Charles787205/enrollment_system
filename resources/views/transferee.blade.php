@@ -382,33 +382,101 @@
             </div>
 
             <div class="form-section">
-                <h3>Parent/Guardian Information</h3>
+                <h3>Parent Information</h3>
 
-                <div class="form-group">
-                    <label>Parent Name <span class="required">*</span></label>
-                    <input type="text" name="parent_name" value="{{ old('parent_name') }}" required>
-                    <small>Full name of primary parent or guardian</small>
-                </div>
-
-                <div class="form-group">
-                    <label>Parent/Guardian Contact Number <span class="required">*</span></label>
-                    <input type="tel" name="parent_guardian_contact" value="{{ old('parent_guardian_contact') }}" required
-                        pattern="[0-9]{11}" title="Please enter a valid 11-digit phone number">
-                </div>
-
-                <hr style="margin: 20px 0;">
-
-                <!-- Optional additional guardian information -->
-                <div class="form-group">
-                    <label>Guardian Name (if different from parent)</label>
-                    <input type="text" name="guardian_name" value="{{ old('guardian_name') }}">
+                <!-- Father Information -->
+                <h4 style="margin-top: 1rem; margin-bottom: 1rem; color: #555;">Father's Information</h4>
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Father's First Name <span class="required">*</span></label>
+                            <input type="text" name="father_first_name" value="{{ old('father_first_name') }}" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Father's Middle Name</label>
+                            <input type="text" name="father_middle_name" value="{{ old('father_middle_name') }}">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Father's Last Name <span class="required">*</span></label>
+                            <input type="text" name="father_last_name" value="{{ old('father_last_name') }}" required>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-col">
                         <div class="form-group">
-                            <label>Guardian's First Name (if different from parents)</label>
+                            <label>Father's Contact Number <span class="required">*</span></label>
+                            <input type="tel" name="father_contact" value="{{ old('father_contact') }}" required
+                                pattern="[0-9]{11}" title="Please enter a valid 11-digit phone number">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Father's Occupation</label>
+                            <input type="text" name="father_occupation" value="{{ old('father_occupation') }}">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mother Information -->
+                <h4 style="margin-top: 1.5rem; margin-bottom: 1rem; color: #555;">Mother's Information</h4>
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Mother's First Name <span class="required">*</span></label>
+                            <input type="text" name="mother_first_name" value="{{ old('mother_first_name') }}" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Mother's Middle Name</label>
+                            <input type="text" name="mother_middle_name" value="{{ old('mother_middle_name') }}">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Mother's Last Name <span class="required">*</span></label>
+                            <input type="text" name="mother_last_name" value="{{ old('mother_last_name') }}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Mother's Contact Number <span class="required">*</span></label>
+                            <input type="tel" name="mother_contact" value="{{ old('mother_contact') }}" required
+                                pattern="[0-9]{11}" title="Please enter a valid 11-digit phone number">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Mother's Occupation</label>
+                            <input type="text" name="mother_occupation" value="{{ old('mother_occupation') }}">
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="margin: 20px 0;">
+
+                <!-- Guardian Information -->
+                <h4 style="margin-top: 1rem; margin-bottom: 1rem; color: #555;">Guardian's Information (if different from parents)</h4>
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Guardian's First Name</label>
                             <input type="text" name="guardian_first_name" value="{{ old('guardian_first_name') }}">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Guardian's Middle Name</label>
+                            <input type="text" name="guardian_middle_name" value="{{ old('guardian_middle_name') }}">
                         </div>
                     </div>
                     <div class="form-col">
