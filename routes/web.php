@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Controllers\OldStudentController;
 use App\Http\Controllers\TransfereeController;
+use App\Http\Controllers\ReturningStudentController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -32,6 +33,10 @@ Route::get('/', function () {
 // Transferee Routes
 Route::get('/transferee', [TransfereeController::class, 'index'])->name('transferee.index');
 Route::post('/transferee', [TransfereeController::class, 'store'])->name('transferee.store');
+
+// Returning Student (Old Student) Routes
+Route::get('/returning', [ReturningStudentController::class, 'index'])->name('returning.index');
+Route::post('/returning', [ReturningStudentController::class, 'store'])->name('returning.store');
 
 // Old Student Verification and Registration
 Route::get('/verify', [OldStudentController::class, 'verifyForm'])->name('verify.form');

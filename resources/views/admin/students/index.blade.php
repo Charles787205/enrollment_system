@@ -252,8 +252,6 @@
             margin: 0;
         }
 
-        <style>
-
         /* Add to existing styles */
         .modal {
             display: none;
@@ -397,15 +395,18 @@
                         <option value="TVL" {{ request('strand') == 'TVL' ? 'selected' : '' }}>TVL</option>
                         <option value="GAS" {{ request('strand') == 'GAS' ? 'selected' : '' }}>GAS</option>
                     </select>
+                    <select name="type" class="form-control">
+                        <option value="">All Types</option>
+                        <option value="old" {{ request('type') == 'old' ? 'selected' : '' }}>Old Student</option>
+                        <option value="transferee" {{ request('type') == 'transferee' ? 'selected' : '' }}>Transferee
+                        </option>
+                    </select>
                     <button type="submit" class="btn btn-primary">Filter</button>
                     <a href="{{ route('admin.students.index') }}" class="btn clear-btn">Clear</a>
                     <a href="{{ route('admin.students.create') }}" class="btn" style="margin-right: 1rem;">
                         <i class="fas fa-plus"></i> Add Student
                     </a>
-                    <form method="GET" action="{{ route('admin.students.index') }}"
-                        style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-
-                    </form>
+                </form>
             </div>
         </div>
 
@@ -417,8 +418,10 @@
                     <th>Name</th>
                     <th>Year Level</th>
                     <th>Email</th>
+                    <th>Contact Number</th>
                     <th>Status</th>
                     <th>Strand</th>
+                    <th>Type</th>
                     <th class="actions">Actions</th>
                 </tr>
             </thead>
@@ -429,8 +432,10 @@
                     <td>{{ $student->first_name }} {{ $student->middle_name }} {{ $student->last_name }}</td>
                     <td>{{ $student->year_level == 11 ? 'Grade 11' : 'Grade 12' }}</td>
                     <td>{{ $student->email }}</td>
+                    <td>{{ $student->formatted_contact_number }}</td>
                     <td>{{ $student->status }}</td>
-                    <td>{{ $student->strand->name }}</td>
+                    <td>{{ $student->strand->name ?? 'N/A' }}</td>
+                    <td>{{ ucfirst($student->type) }}</td>
                     <td class="actions">
                         <div class="btn-group">
                             <button onclick="window.location.href='{{ route('admin.students.show', $student->id) }}'"
@@ -460,7 +465,6 @@
         <!-- Pagination Links -->
         <div class="pagination">
             {{ $students->links() }}
-
         </div>
     </div>
 

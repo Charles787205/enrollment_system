@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Old Students (Transferee) Management</h4>
+                    <h4 class="card-title">Old Students Management</h4>
                     <div class="card-tools">
                         <a href="{{ route('admin.old_students.create') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> Add New Old Student
@@ -53,47 +53,37 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($transferees as $transferee)
-                                            @if($transferee->grade_level == '11')
+                                            @foreach($students as $student)
+                                            @if($student->year_level == '11')
                                             <tr>
                                                 <td>
                                                     <input type="checkbox" name="student_ids[]"
-                                                        value="{{ $transferee->id }}" class="student-checkbox">
+                                                        value="{{ $student->id }}" class="student-checkbox">
                                                 </td>
-                                                <td>{{ $transferee->id }}</td>
-                                                <td>{{ $transferee->first_name }} {{ $transferee->middle_name }}
-                                                    {{ $transferee->last_name }}</td>
-                                                <td>{{ $transferee->email }}</td>
-                                                <td>{{ $transferee->contact_number }}</td>
-                                                <td>{{ $transferee->strand ? $transferee->strand->name : 'N/A' }}</td>
+                                                <td>{{ $student->id }}</td>
+                                                <td>{{ $student->first_name }} {{ $student->middle_name }}
+                                                    {{ $student->last_name }}</td>
+                                                <td>{{ $student->email }}</td>
+                                                <td>{{ $student->PhoneNumber }}</td>
+                                                <td>{{ $student->strand ? $student->strand->name : 'N/A' }}</td>
                                                 <td>
                                                     <span
-                                                        class="badge badge-{{ $transferee->status == 'PASSED' ? 'success' : ($transferee->status == 'ENROLLED' ? 'primary' : 'warning') }}">
-                                                        {{ $transferee->status }}
+                                                        class="badge badge-{{ $student->status == 'PASSED' ? 'success' : ($student->status == 'ENROLLED' ? 'primary' : 'warning') }}">
+                                                        {{ $student->status }}
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="{{ route('admin.old_students.show', $transferee->id) }}"
+                                                        <a href="{{ route('admin.old_students.show', $student->id) }}"
                                                             class="btn btn-info btn-sm">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <a href="{{ route('admin.old_students.edit', $transferee->id) }}"
+                                                        <a href="{{ route('admin.old_students.edit', $student->id) }}"
                                                             class="btn btn-primary btn-sm">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        @if($transferee->status == 'PENDING')
                                                         <form
-                                                            action="{{ route('admin.old_students.approve', $transferee->id) }}"
-                                                            method="POST" style="display: inline-block;">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-success btn-sm">
-                                                                <i class="fas fa-check"></i>
-                                                            </button>
-                                                        </form>
-                                                        @endif
-                                                        <form
-                                                            action="{{ route('admin.old_students.destroy', $transferee->id) }}"
+                                                            action="{{ route('admin.old_students.destroy', $student->id) }}"
                                                             method="POST" style="display: inline-block;"
                                                             onsubmit="return confirm('Are you sure you want to delete this student?');">
                                                             @csrf
@@ -136,17 +126,17 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($transferees as $transferee)
-                                            @if($transferee->grade_level == '11' && $transferee->status == 'PASSED')
+                                            @foreach($students as $student)
+                                            @if($student->year_level == '11' && $student->status == 'PASSED')
                                             <tr>
                                                 <td>
                                                     <input type="checkbox" name="student_ids[]"
-                                                        value="{{ $transferee->id }}" class="promote-checkbox">
+                                                        value="{{ $student->id }}" class="promote-checkbox">
                                                 </td>
-                                                <td>{{ $transferee->id }}</td>
-                                                <td>{{ $transferee->first_name }} {{ $transferee->middle_name }}
-                                                    {{ $transferee->last_name }}</td>
-                                                <td>{{ $transferee->strand ? $transferee->strand->name : 'N/A' }}</td>
+                                                <td>{{ $student->id }}</td>
+                                                <td>{{ $student->first_name }} {{ $student->middle_name }}
+                                                    {{ $student->last_name }}</td>
+                                                <td>{{ $student->strand ? $student->strand->name : 'N/A' }}</td>
                                                 <td>
                                                     <span class="badge badge-success">PASSED</span>
                                                 </td>
@@ -183,47 +173,37 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($transferees as $transferee)
-                                            @if($transferee->grade_level == '12')
+                                            @foreach($students as $student)
+                                            @if($student->year_level == '12')
                                             <tr>
                                                 <td>
                                                     <input type="checkbox" name="student_ids[]"
-                                                        value="{{ $transferee->id }}" class="student-checkbox">
+                                                        value="{{ $student->id }}" class="student-checkbox">
                                                 </td>
-                                                <td>{{ $transferee->id }}</td>
-                                                <td>{{ $transferee->first_name }} {{ $transferee->middle_name }}
-                                                    {{ $transferee->last_name }}</td>
-                                                <td>{{ $transferee->email }}</td>
-                                                <td>{{ $transferee->contact_number }}</td>
-                                                <td>{{ $transferee->strand ? $transferee->strand->name : 'N/A' }}</td>
+                                                <td>{{ $student->id }}</td>
+                                                <td>{{ $student->first_name }} {{ $student->middle_name }}
+                                                    {{ $student->last_name }}</td>
+                                                <td>{{ $student->email }}</td>
+                                                <td>{{ $student->PhoneNumber }}</td>
+                                                <td>{{ $student->strand ? $student->strand->name : 'N/A' }}</td>
                                                 <td>
                                                     <span
-                                                        class="badge badge-{{ $transferee->status == 'PASSED' ? 'success' : ($transferee->status == 'ENROLLED' ? 'primary' : 'warning') }}">
-                                                        {{ $transferee->status }}
+                                                        class="badge badge-{{ $student->status == 'PASSED' ? 'success' : ($student->status == 'ENROLLED' ? 'primary' : 'warning') }}">
+                                                        {{ $student->status }}
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="{{ route('admin.old_students.show', $transferee->id) }}"
+                                                        <a href="{{ route('admin.old_students.show', $student->id) }}"
                                                             class="btn btn-info btn-sm">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <a href="{{ route('admin.old_students.edit', $transferee->id) }}"
+                                                        <a href="{{ route('admin.old_students.edit', $student->id) }}"
                                                             class="btn btn-primary btn-sm">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        @if($transferee->status == 'PENDING')
                                                         <form
-                                                            action="{{ route('admin.old_students.approve', $transferee->id) }}"
-                                                            method="POST" style="display: inline-block;">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-success btn-sm">
-                                                                <i class="fas fa-check"></i>
-                                                            </button>
-                                                        </form>
-                                                        @endif
-                                                        <form
-                                                            action="{{ route('admin.old_students.destroy', $transferee->id) }}"
+                                                            action="{{ route('admin.old_students.destroy', $student->id) }}"
                                                             method="POST" style="display: inline-block;"
                                                             onsubmit="return confirm('Are you sure you want to delete this student?');">
                                                             @csrf

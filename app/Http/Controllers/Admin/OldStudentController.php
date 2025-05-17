@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Transferee;
 use App\Models\Student;
+use App\Models\StudentDetail;
 use App\Models\Strand;
 use App\Models\Section;
 use Illuminate\Support\Facades\Validator;
@@ -17,8 +17,8 @@ class OldStudentController extends Controller
      */
     public function index()
     {
-        $transferees = Transferee::with('strand')->get();
-        return view('admin.old_students.index', compact('transferees'));
+        $students = Student::where('type', 'old')->with('strand', 'details')->get();
+        return view('admin.old_students.index', compact('students'));
     }
 
     /**
@@ -26,8 +26,11 @@ class OldStudentController extends Controller
      */
     public function gradeLevel($level)
     {
-        $transferees = Transferee::where('grade_level', $level)->with('strand')->get();
-        return view('admin.old_students.grade_level', compact('transferees', 'level'));
+        $students = Student::where('type', 'old')
+                         ->where('year_level', $level)
+                         ->with('strand', 'details')
+                         ->get();
+        return view('admin.old_students.grade_level', compact('students', 'level'));
     }
 
     /**
@@ -47,17 +50,22 @@ class OldStudentController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:transferees,email',
+            'email' => 'required|email|unique:students,email',
             'contact_number' => 'required|string|max:20',
             'previous_school' => 'required|string|max:255',
-            'program' => 'required|string|max:255',
             'academic_year' => 'required|string|max:255',
-            'grade_level' => 'required|in:11,12',
+            'year_level' => 'required|in:11,12',
             'strand_id' => 'required|exists:strands,id',
             'parent_name' => 'required|string|max:255',
             'parent_guardian_contact' => 'required|string|max:20',
             'status' => 'required|string',
             'Sex' => 'required|in:Male,Female',
+            // Address fields
+            'street' => 'nullable|string|max:255',
+            'barangay' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'province' => 'nullable|string|max:255',
+            'postal_code' => 'nullable|string|max:10',
         ]);
 
         if ($validator->fails()) {
@@ -66,7 +74,35 @@ class OldStudentController extends Controller
                 ->withInput();
         }
 
-        $transferee = Transferee::create($request->all());
+        // Create new student record
+        $student = Student::create([
+            'type' => 'old',
+            'student_id' => 'O' . date('Y') . str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT),
+            'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'year_level' => $request->year_level,
+            'strand_id' => $request->strand_id,
+            'status' => $request->status,
+            'Sex' => $request->Sex,
+            'previous_school' => $request->previous_school,
+            'PhoneNumber' => $request->contact_number,
+            'EnrollmentDate' => now(),
+        ]);
+        
+        // Create student details record
+        StudentDetail::create([
+            'student_id' => $student->id,
+            'street' => $request->street,
+            'barangay' => $request->barangay,
+            'city' => $request->city,
+            'province' => $request->province,
+            'postal_code' => $request->postal_code,
+            'father_first_name' => explode(' ', $request->parent_name)[0] ?? null,
+            'father_last_name' => count(explode(' ', $request->parent_name)) > 1 ? explode(' ', $request->parent_name)[1] : null,
+            'guardian_contact_number' => $request->parent_guardian_contact,
+        ]);
 
         return redirect()->route('admin.old_students.index')
             ->with('success', 'Old student added successfully.');
@@ -77,8 +113,8 @@ class OldStudentController extends Controller
      */
     public function show($id)
     {
-        $transferee = Transferee::with('strand')->findOrFail($id);
-        return view('admin.old_students.show', compact('transferee'));
+        $student = Student::where('type', 'old')->with('strand', 'details')->findOrFail($id);
+        return view('admin.old_students.show', compact('student'));
     }
 
     /**
@@ -86,9 +122,9 @@ class OldStudentController extends Controller
      */
     public function edit($id)
     {
-        $transferee = Transferee::findOrFail($id);
+        $student = Student::where('type', 'old')->with('details')->findOrFail($id);
         $strands = Strand::all();
-        return view('admin.old_students.edit', compact('transferee', 'strands'));
+        return view('admin.old_students.edit', compact('student', 'strands'));
     }
 
     /**
@@ -99,15 +135,20 @@ class OldStudentController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:transferees,email,' . $id,
+            'email' => 'required|email|unique:students,email,' . $id,
             'contact_number' => 'required|string|max:20',
             'previous_school' => 'required|string|max:255',
-            'program' => 'required|string|max:255',
             'academic_year' => 'required|string|max:255',
-            'grade_level' => 'required|in:11,12',
+            'year_level' => 'required|in:11,12',
             'strand_id' => 'required|exists:strands,id',
             'parent_name' => 'required|string|max:255',
             'parent_guardian_contact' => 'required|string|max:20',
+            // Address fields
+            'street' => 'nullable|string|max:255',
+            'barangay' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'province' => 'nullable|string|max:255',
+            'postal_code' => 'nullable|string|max:10',
         ]);
 
         if ($validator->fails()) {
@@ -116,8 +157,45 @@ class OldStudentController extends Controller
                 ->withInput();
         }
 
-        $transferee = Transferee::findOrFail($id);
-        $transferee->update($request->all());
+        $student = Student::where('type', 'old')->findOrFail($id);
+        
+        // Update student record
+        $student->update([
+            'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'year_level' => $request->year_level,
+            'strand_id' => $request->strand_id,
+            'previous_school' => $request->previous_school,
+            'PhoneNumber' => $request->contact_number,
+        ]);
+        
+        // Update or create student details
+        if ($student->details) {
+            $student->details->update([
+                'street' => $request->street,
+                'barangay' => $request->barangay,
+                'city' => $request->city,
+                'province' => $request->province,
+                'postal_code' => $request->postal_code,
+                'father_first_name' => explode(' ', $request->parent_name)[0] ?? null,
+                'father_last_name' => count(explode(' ', $request->parent_name)) > 1 ? explode(' ', $request->parent_name)[1] : null,
+                'guardian_contact_number' => $request->parent_guardian_contact,
+            ]);
+        } else {
+            StudentDetail::create([
+                'student_id' => $student->id,
+                'street' => $request->street,
+                'barangay' => $request->barangay,
+                'city' => $request->city,
+                'province' => $request->province,
+                'postal_code' => $request->postal_code,
+                'father_first_name' => explode(' ', $request->parent_name)[0] ?? null,
+                'father_last_name' => count(explode(' ', $request->parent_name)) > 1 ? explode(' ', $request->parent_name)[1] : null,
+                'guardian_contact_number' => $request->parent_guardian_contact,
+            ]);
+        }
 
         return redirect()->route('admin.old_students.index')
             ->with('success', 'Old student updated successfully.');
@@ -128,52 +206,18 @@ class OldStudentController extends Controller
      */
     public function destroy($id)
     {
-        $transferee = Transferee::findOrFail($id);
-        $transferee->delete();
+        $student = Student::where('type', 'old')->findOrFail($id);
+        
+        // Delete related details
+        if ($student->details) {
+            $student->details->delete();
+        }
+        
+        // Delete student record
+        $student->delete();
 
         return redirect()->route('admin.old_students.index')
             ->with('success', 'Old student deleted successfully.');
-    }
-
-    /**
-     * Approve a transferee and create a student account.
-     */
-    public function approve($id)
-    {
-        $transferee = Transferee::findOrFail($id);
-        
-        // Generate a student ID
-        $studentId = 'ST' . date('Y') . str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
-        
-        // Create a new student record
-        $student = new Student([
-            'student_id' => $studentId,
-            'first_name' => $transferee->first_name,
-            'middle_name' => $transferee->middle_name,
-            'last_name' => $transferee->last_name,
-            'email' => $transferee->email,
-            'street_address' => $transferee->street_address,
-            'city' => $transferee->city,
-            'province' => $transferee->province,
-            'postal_code' => $transferee->postal_code,
-            'parent_name' => $transferee->parent_name,
-            'guardian_name' => $transferee->guardian_name,
-            'parent_guardian_contact' => $transferee->parent_guardian_contact,
-            'year_level' => $transferee->grade_level,
-            'strand_id' => $transferee->strand_id,
-            'status' => 'ENROLLED',
-            'PhoneNumber' => $transferee->contact_number,
-            'EnrollmentDate' => now()
-        ]);
-        
-        $student->save();
-        
-        // Update transferee status
-        $transferee->status = 'ENROLLED';
-        $transferee->save();
-        
-        return redirect()->route('admin.old_students.index')
-            ->with('success', 'Transferee approved and student account created successfully.');
     }
 
     /**

@@ -328,7 +328,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Previous School</th>
-                        <th>Program</th>
+                        <th>Strand</th>
                         <th>Documents</th>
                         <th>Date Applied</th>
                         <th>Status</th>
@@ -342,7 +342,7 @@
                         </td>
                         <td>{{ $transferee->email }}</td>
                         <td>{{ $transferee->previous_school }}</td>
-                        <td>{{ $transferee->program }}</td>
+                        <td>{{ $transferee->strand ? $transferee->strand->name : 'N/A' }}</td>
                         <td>
                             <a href="#" class="document-link"
                                 data-image="{{ asset('storage/' . $transferee->report_card_path) }}">
@@ -358,11 +358,11 @@
                             </a>
                         </td>
                         <td>{{ $transferee->created_at->format('M d, Y') }}</td>
-                        <td class="status {{ $transferee->status == 'enrolled' ? 'enrolled' : 'pending' }}">
-                            {{ ucfirst($transferee->status) }}
+                        <td class="status {{ strtolower($transferee->status) == 'enrolled' ? 'enrolled' : 'pending' }}">
+                            {{ $transferee->status }}
                         </td>
                         <td>
-                            @if($transferee->status != 'enrolled')
+                            @if(strtolower($transferee->status) != 'enrolled')
                             <form action="{{ route('admin.transferees.enroll', $transferee->id) }}" method="POST"
                                 class="enroll-form" data-transferee-id="{{ $transferee->id }}">
                                 @csrf
@@ -384,7 +384,6 @@
         </div>
     </div>
 
-    <!-- Modal to show image -->
     <!-- Modal to show image -->
     <div id="imageModal" class="modal">
         <div class="modal-content">

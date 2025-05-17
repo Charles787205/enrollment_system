@@ -282,6 +282,9 @@
 
         <form action="{{ route('transferee.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
+            <!-- Hidden type field to identify this as a transferee -->
+            <input type="hidden" name="type" value="transferee">
+
             <div class="form-section">
                 <h3>Personal Information</h3>
 
@@ -321,6 +324,25 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Gender <span class="required">*</span></label>
+                            <select name="Sex" required>
+                                <option value="" disabled selected>Select gender</option>
+                                <option value="Male" {{ old('Sex') == 'Male' ? 'selected' : '' }}>Male</option>
+                                <option value="Female" {{ old('Sex') == 'Female' ? 'selected' : '' }}>Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Date of Birth <span class="required">*</span></label>
+                            <input type="date" name="DateOfBirth" value="{{ old('DateOfBirth') }}" required>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="form-section">
@@ -329,6 +351,11 @@
                 <div class="form-group">
                     <label>Street Address <span class="required">*</span></label>
                     <input type="text" name="street_address" value="{{ old('street_address') }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Barangay <span class="required">*</span></label>
+                    <input type="text" name="barangay" value="{{ old('barangay') }}" required>
                 </div>
 
                 <div class="form-row">
@@ -357,25 +384,56 @@
             <div class="form-section">
                 <h3>Parent/Guardian Information</h3>
 
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label>Parent's Name <span class="required">*</span></label>
-                            <input type="text" name="parent_name" value="{{ old('parent_name') }}" required>
-                        </div>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label>Guardian's Name (if different from parent)</label>
-                            <input type="text" name="guardian_name" value="{{ old('guardian_name') }}">
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label>Parent Name <span class="required">*</span></label>
+                    <input type="text" name="parent_name" value="{{ old('parent_name') }}" required>
+                    <small>Full name of primary parent or guardian</small>
                 </div>
 
                 <div class="form-group">
                     <label>Parent/Guardian Contact Number <span class="required">*</span></label>
-                    <input type="tel" name="parent_guardian_contact" value="{{ old('parent_guardian_contact') }}"
-                        required pattern="[0-9]{11}" title="Please enter a valid 11-digit phone number">
+                    <input type="tel" name="parent_guardian_contact" value="{{ old('parent_guardian_contact') }}" required
+                        pattern="[0-9]{11}" title="Please enter a valid 11-digit phone number">
+                </div>
+
+                <hr style="margin: 20px 0;">
+
+                <!-- Optional additional guardian information -->
+                <div class="form-group">
+                    <label>Guardian Name (if different from parent)</label>
+                    <input type="text" name="guardian_name" value="{{ old('guardian_name') }}">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Guardian's First Name (if different from parents)</label>
+                            <input type="text" name="guardian_first_name" value="{{ old('guardian_first_name') }}">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Guardian's Last Name</label>
+                            <input type="text" name="guardian_last_name" value="{{ old('guardian_last_name') }}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Guardian Contact Number</label>
+                            <input type="tel" name="guardian_contact_number"
+                                value="{{ old('guardian_contact_number') }}" pattern="[0-9]{11}"
+                                title="Please enter a valid 11-digit phone number">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label>Relationship to Student</label>
+                            <input type="text" name="guardian_relationship" value="{{ old('guardian_relationship') }}">
+                        </div>
+                    </div>
                 </div>
             </div>
 

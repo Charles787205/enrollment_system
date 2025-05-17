@@ -304,12 +304,15 @@
         <div class="form-container">
             <form action="{{ route('admin.students.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                <!-- Hidden field to identify this as an 'old' student -->
+                <input type="hidden" name="type" value="old">
+
                 <div class="form-group">
                     <label for="student_id">Student ID</label>
                     <input type="text" class="form-control" id="student_id" name="student_id"
                         value="{{ old('student_id') }}" required>
                 </div>
-                <!-- Split the Full Name field into First Name, Middle Name, and Last Name -->
+                <!-- Personal Information -->
                 <div class="form-group">
                     <label for="first_name">First Name</label>
                     <input type="text" class="form-control" id="first_name" name="first_name"
@@ -327,34 +330,37 @@
                         value="{{ old('last_name') }}" required>
                 </div>
                 <div class="form-group">
-                    <label for="year_level">Year Level</label>
-                    <select class="form-control" id="year_level" name="year_level" required>
-                        <option value="">Select Year Level</option>
-                        <option value="11" {{ old('year_level') == '11' ? 'selected' : '' }}>Grade 11</option>
-                        <option value="12" {{ old('year_level') == '12' ? 'selected' : '' }}>Grade 12</option>
-                    </select>
-                </div>
-                <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}"
                         required>
                 </div>
                 <div class="form-group">
-                    <label for="Sex">Sex</label>
+                    <label for="contact_number">Contact Number</label>
+                    <input type="text" class="form-control" id="contact_number" name="contact_number"
+                        value="{{ old('contact_number') }}" pattern="[0-9]{11}" required>
+                    <small class="text-muted">11-digit phone number (e.g., 09123456789)</small>
+                </div>
+                <div class="form-group">
+                    <label for="DateOfBirth">Date of Birth</label>
+                    <input type="date" class="form-control" id="DateOfBirth" name="DateOfBirth"
+                        value="{{ old('DateOfBirth') }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="Sex">Gender</label>
                     <select class="form-control" id="Sex" name="Sex" required>
-                        <option value="">Select Sex</option>
+                        <option value="">Select Gender</option>
                         <option value="Male" {{ old('Sex') == 'Male' ? 'selected' : '' }}>Male</option>
                         <option value="Female" {{ old('Sex') == 'Female' ? 'selected' : '' }}>Female</option>
                     </select>
                 </div>
+
+                <!-- Academic Information -->
                 <div class="form-group">
-                    <label for="status">Status</label>
-                    <select class="form-control" id="status" name="status" required>
-                        <option value="">Select Status</option>
-                        <option value="ENROLLED" {{ old('status') == 'ENROLLED' ? 'selected' : '' }}>ENROLLED</option>
-                        <option value="PENDING" {{ old('status') == 'PENDING' ? 'selected' : '' }}>PENDING</option>
-                        <option value="PASSED" {{ old('status') == 'PASSED' ? 'selected' : '' }}>PASSED</option>
-                        <option value="FAILED" {{ old('status') == 'FAILED' ? 'selected' : '' }}>FAILED</option>
+                    <label for="year_level">Year Level</label>
+                    <select class="form-control" id="year_level" name="year_level" required>
+                        <option value="">Select Year Level</option>
+                        <option value="11" {{ old('year_level') == '11' ? 'selected' : '' }}>Grade 11</option>
+                        <option value="12" {{ old('year_level') == '12' ? 'selected' : '' }}>Grade 12</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -368,6 +374,132 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select class="form-control" id="status" name="status" required>
+                        <option value="">Select Status</option>
+                        <option value="ENROLLED" {{ old('status') == 'ENROLLED' ? 'selected' : '' }}>ENROLLED</option>
+                        <option value="PENDING" {{ old('status') == 'PENDING' ? 'selected' : '' }}>PENDING</option>
+                        <option value="PASSED" {{ old('status') == 'PASSED' ? 'selected' : '' }}>PASSED</option>
+                        <option value="FAILED" {{ old('status') == 'FAILED' ? 'selected' : '' }}>FAILED</option>
+                    </select>
+                </div>
+
+                <!-- Address Information (StudentDetail) -->
+                <h3 style="margin-top: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Address
+                    Information</h3>
+
+                <div class="form-group">
+                    <label for="street">Street Address</label>
+                    <input type="text" class="form-control" id="street" name="street" value="{{ old('street') }}"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="barangay">Barangay</label>
+                    <input type="text" class="form-control" id="barangay" name="barangay" value="{{ old('barangay') }}"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="city">City/Municipality</label>
+                    <input type="text" class="form-control" id="city" name="city" value="{{ old('city') }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="province">Province</label>
+                    <input type="text" class="form-control" id="province" name="province" value="{{ old('province') }}"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="postal_code">Postal Code</label>
+                    <input type="text" class="form-control" id="postal_code" name="postal_code"
+                        value="{{ old('postal_code') }}" pattern="[0-9]{4}" required>
+                    <small class="text-muted">4-digit code (e.g., 1234)</small>
+                </div>
+
+                <!-- Parent/Guardian Information (StudentDetail) -->
+                <h3 style="margin-top: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Parent/Guardian
+                    Information</h3>
+
+                <div class="form-group">
+                    <label for="father_first_name">Father's First Name</label>
+                    <input type="text" class="form-control" id="father_first_name" name="father_first_name"
+                        value="{{ old('father_first_name') }}">
+                </div>
+                <div class="form-group">
+                    <label for="father_middle_name">Father's Middle Name</label>
+                    <input type="text" class="form-control" id="father_middle_name" name="father_middle_name"
+                        value="{{ old('father_middle_name') }}">
+                </div>
+                <div class="form-group">
+                    <label for="father_last_name">Father's Last Name</label>
+                    <input type="text" class="form-control" id="father_last_name" name="father_last_name"
+                        value="{{ old('father_last_name') }}">
+                </div>
+                <div class="form-group">
+                    <label for="father_contact_number">Father's Contact Number</label>
+                    <input type="text" class="form-control" id="father_contact_number" name="father_contact_number"
+                        value="{{ old('father_contact_number') }}" pattern="[0-9]{11}">
+                    <small class="text-muted">11-digit phone number (e.g., 09123456789)</small>
+                </div>
+                <div class="form-group">
+                    <label for="father_occupation">Father's Occupation</label>
+                    <input type="text" class="form-control" id="father_occupation" name="father_occupation"
+                        value="{{ old('father_occupation') }}">
+                </div>
+
+                <hr style="margin: 20px 0;">
+
+                <div class="form-group">
+                    <label for="mother_first_name">Mother's First Name</label>
+                    <input type="text" class="form-control" id="mother_first_name" name="mother_first_name"
+                        value="{{ old('mother_first_name') }}">
+                </div>
+                <div class="form-group">
+                    <label for="mother_middle_name">Mother's Middle Name</label>
+                    <input type="text" class="form-control" id="mother_middle_name" name="mother_middle_name"
+                        value="{{ old('mother_middle_name') }}">
+                </div>
+                <div class="form-group">
+                    <label for="mother_last_name">Mother's Last Name</label>
+                    <input type="text" class="form-control" id="mother_last_name" name="mother_last_name"
+                        value="{{ old('mother_last_name') }}">
+                </div>
+                <div class="form-group">
+                    <label for="mother_contact_number">Mother's Contact Number</label>
+                    <input type="text" class="form-control" id="mother_contact_number" name="mother_contact_number"
+                        value="{{ old('mother_contact_number') }}" pattern="[0-9]{11}">
+                    <small class="text-muted">11-digit phone number (e.g., 09123456789)</small>
+                </div>
+                <div class="form-group">
+                    <label for="mother_occupation">Mother's Occupation</label>
+                    <input type="text" class="form-control" id="mother_occupation" name="mother_occupation"
+                        value="{{ old('mother_occupation') }}">
+                </div>
+
+                <hr style="margin: 20px 0;">
+
+                <div class="form-group">
+                    <label for="guardian_first_name">Guardian's First Name (if different from parents)</label>
+                    <input type="text" class="form-control" id="guardian_first_name" name="guardian_first_name"
+                        value="{{ old('guardian_first_name') }}">
+                </div>
+                <div class="form-group">
+                    <label for="guardian_last_name">Guardian's Last Name</label>
+                    <input type="text" class="form-control" id="guardian_last_name" name="guardian_last_name"
+                        value="{{ old('guardian_last_name') }}">
+                </div>
+                <div class="form-group">
+                    <label for="guardian_contact_number">Guardian's Contact Number</label>
+                    <input type="text" class="form-control" id="guardian_contact_number" name="guardian_contact_number"
+                        value="{{ old('guardian_contact_number') }}" pattern="[0-9]{11}">
+                    <small class="text-muted">11-digit phone number (e.g., 09123456789)</small>
+                </div>
+                <div class="form-group">
+                    <label for="guardian_relationship">Relationship to Student</label>
+                    <input type="text" class="form-control" id="guardian_relationship" name="guardian_relationship"
+                        value="{{ old('guardian_relationship') }}">
+                    <small class="text-muted">e.g., Aunt, Uncle, Grandparent</small>
+                </div>
+
                 <div class="button-group">
                     <button type="submit" class="btn btn-primary">Save Student</button>
                     <a href="{{ route('admin.students.index') }}" class="btn btn-secondary">Cancel</a>

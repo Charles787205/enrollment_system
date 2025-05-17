@@ -22,6 +22,9 @@
                         </div>
                         @endif
 
+                        <!-- Hidden field for student type -->
+                        <input type="hidden" name="type" value="old">
+
                         <div class="card card-secondary">
                             <div class="card-header">
                                 <h3 class="card-title">Personal Information</h3>
@@ -72,6 +75,28 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Sex">Gender <span class="text-danger">*</span></label>
+                                            <select class="form-control" id="Sex" name="Sex" required>
+                                                <option value="">Select Gender</option>
+                                                <option value="Male" {{ old('Sex') == 'Male' ? 'selected' : '' }}>Male
+                                                </option>
+                                                <option value="Female" {{ old('Sex') == 'Female' ? 'selected' : '' }}>
+                                                    Female</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="DateOfBirth">Date of Birth</label>
+                                            <input type="date" class="form-control" id="DateOfBirth" name="DateOfBirth"
+                                                value="{{ old('DateOfBirth') }}">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -81,10 +106,15 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="street_address">Street Address <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="street_address" name="street_address"
-                                        value="{{ old('street_address') }}" required>
+                                    <label for="street">Street Address <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="street" name="street"
+                                        value="{{ old('street') }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="barangay">Barangay <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="barangay" name="barangay"
+                                        value="{{ old('barangay') }}" required>
                                 </div>
 
                                 <div class="row">
@@ -122,32 +152,130 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="parent_name">Parent's Name <span
-                                                    class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="parent_name" name="parent_name"
-                                                value="{{ old('parent_name') }}" required>
+                                            <label for="father_first_name">Father's First Name</label>
+                                            <input type="text" class="form-control" id="father_first_name"
+                                                name="father_first_name" value="{{ old('father_first_name') }}">
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="guardian_name">Guardian's Name</label>
-                                            <input type="text" class="form-control" id="guardian_name"
-                                                name="guardian_name" value="{{ old('guardian_name') }}">
-                                            <small class="form-text text-muted">If different from parent</small>
+                                            <label for="father_middle_name">Father's Middle Name</label>
+                                            <input type="text" class="form-control" id="father_middle_name"
+                                                name="father_middle_name" value="{{ old('father_middle_name') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="father_last_name">Father's Last Name</label>
+                                            <input type="text" class="form-control" id="father_last_name"
+                                                name="father_last_name" value="{{ old('father_last_name') }}">
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="parent_guardian_contact">Parent/Guardian Contact Number <span
-                                            class="text-danger">*</span></label>
-                                    <input type="tel" class="form-control" id="parent_guardian_contact"
-                                        name="parent_guardian_contact" value="{{ old('parent_guardian_contact') }}"
-                                        required pattern="[0-9]{11}">
-                                    <small class="form-text text-muted">11-digit phone number (e.g.,
-                                        09123456789)</small>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="father_contact_number">Father's Contact Number</label>
+                                            <input type="tel" class="form-control" id="father_contact_number"
+                                                name="father_contact_number" value="{{ old('father_contact_number') }}"
+                                                pattern="[0-9]{11}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="father_occupation">Father's Occupation</label>
+                                            <input type="text" class="form-control" id="father_occupation"
+                                                name="father_occupation" value="{{ old('father_occupation') }}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="mother_first_name">Mother's First Name</label>
+                                            <input type="text" class="form-control" id="mother_first_name"
+                                                name="mother_first_name" value="{{ old('mother_first_name') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="mother_middle_name">Mother's Middle Name</label>
+                                            <input type="text" class="form-control" id="mother_middle_name"
+                                                name="mother_middle_name" value="{{ old('mother_middle_name') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="mother_last_name">Mother's Last Name</label>
+                                            <input type="text" class="form-control" id="mother_last_name"
+                                                name="mother_last_name" value="{{ old('mother_last_name') }}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="mother_contact_number">Mother's Contact Number</label>
+                                            <input type="tel" class="form-control" id="mother_contact_number"
+                                                name="mother_contact_number" value="{{ old('mother_contact_number') }}"
+                                                pattern="[0-9]{11}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="mother_occupation">Mother's Occupation</label>
+                                            <input type="text" class="form-control" id="mother_occupation"
+                                                name="mother_occupation" value="{{ old('mother_occupation') }}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="guardian_first_name">Guardian's First Name</label>
+                                            <input type="text" class="form-control" id="guardian_first_name"
+                                                name="guardian_first_name" value="{{ old('guardian_first_name') }}">
+                                            <small class="form-text text-muted">If different from parents</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="guardian_last_name">Guardian's Last Name</label>
+                                            <input type="text" class="form-control" id="guardian_last_name"
+                                                name="guardian_last_name" value="{{ old('guardian_last_name') }}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="guardian_contact_number">Guardian Contact Number</label>
+                                            <input type="tel" class="form-control" id="guardian_contact_number"
+                                                name="guardian_contact_number"
+                                                value="{{ old('guardian_contact_number') }}" pattern="[0-9]{11}">
+                                            <small class="form-text text-muted">11-digit phone number (e.g.,
+                                                09123456789)</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="guardian_relationship">Relationship to Student</label>
+                                            <input type="text" class="form-control" id="guardian_relationship"
+                                                name="guardian_relationship" value="{{ old('guardian_relationship') }}">
+                                            <small class="form-text text-muted">e.g., Aunt, Uncle, Grandparent</small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -181,13 +309,13 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="grade_level">Grade Level <span
+                                            <label for="year_level">Grade Level <span
                                                     class="text-danger">*</span></label>
-                                            <select class="form-control" id="grade_level" name="grade_level" required>
+                                            <select class="form-control" id="year_level" name="year_level" required>
                                                 <option value="">Select Grade Level</option>
-                                                <option value="11" {{ old('grade_level') == '11' ? 'selected' : '' }}>
+                                                <option value="11" {{ old('year_level') == '11' ? 'selected' : '' }}>
                                                     Grade 11</option>
-                                                <option value="12" {{ old('grade_level') == '12' ? 'selected' : '' }}>
+                                                <option value="12" {{ old('year_level') == '12' ? 'selected' : '' }}>
                                                     Grade 12</option>
                                             </select>
                                         </div>
@@ -207,10 +335,16 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="program">Program <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="program" name="program"
-                                        value="{{ old('program') }}" required>
-                                    <small class="form-text text-muted">e.g., STEM, ABM, HUMSS, etc.</small>
+                                    <label for="status">Status <span class="text-danger">*</span></label>
+                                    <select class="form-control" id="status" name="status" required>
+                                        <option value="">Select Status</option>
+                                        <option value="PENDING" {{ old('status') == 'PENDING' ? 'selected' : '' }}>
+                                            PENDING</option>
+                                        <option value="ENROLLED" {{ old('status') == 'ENROLLED' ? 'selected' : '' }}>
+                                            ENROLLED</option>
+                                        <option value="PASSED" {{ old('status') == 'PASSED' ? 'selected' : '' }}>PASSED
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -221,41 +355,13 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="report_card_path">Report Card <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="report_card_path"
-                                                name="report_card_path" accept=".pdf,.jpg,.jpeg,.png" required>
-                                            <label class="custom-file-label" for="report_card_path">Choose file</label>
-                                        </div>
-                                    </div>
-                                    <small class="form-text text-muted">Accepted formats: PDF, JPG, PNG (Max:
-                                        2MB)</small>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="good_moral_path">Good Moral Certificate <span
+                                    <label for="grade_file_url">Grade Report or Clearance <span
                                             class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="good_moral_path"
-                                                name="good_moral_path" accept=".pdf,.jpg,.jpeg,.png" required>
-                                            <label class="custom-file-label" for="good_moral_path">Choose file</label>
-                                        </div>
-                                    </div>
-                                    <small class="form-text text-muted">Accepted formats: PDF, JPG, PNG (Max:
-                                        2MB)</small>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="birth_certificate_path">Birth Certificate <span
-                                            class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="birth_certificate_path"
-                                                name="birth_certificate_path" accept=".pdf,.jpg,.jpeg,.png" required>
-                                            <label class="custom-file-label" for="birth_certificate_path">Choose
-                                                file</label>
+                                            <input type="file" class="custom-file-input" id="grade_file_url"
+                                                name="grade_file_url" accept=".pdf,.jpg,.jpeg,.png" required>
+                                            <label class="custom-file-label" for="grade_file_url">Choose file</label>
                                         </div>
                                     </div>
                                     <small class="form-text text-muted">Accepted formats: PDF, JPG, PNG (Max:

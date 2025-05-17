@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transferee;
-use App\Models\Strand; // Added to fetch available strands
 use App\Models\Student;
+use App\Models\StudentDetail;
+use App\Models\Strand;
 use Illuminate\Http\Request;
 
 class TransfereeController extends Controller
@@ -46,64 +46,51 @@ class TransfereeController extends Controller
         $goodMoralPath = $request->file('good_moral_path')->store('documents', 'public');
         $birthCertificatePath = $request->file('birth_certificate_path')->store('documents', 'public');
     
-        // Save the transferee application with the file paths
-        $transferee = Transferee::create([
+        // Create student with type='transferee'
+        $student = Student::create([
+            'type' => 'transferee',
+            'student_id' => 'T' . date('Y') . str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT),
             'first_name' => $request->first_name,
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
-            'contact_number' => $request->contact_number,
-            'street_address' => $request->street_address,
-            'city' => $request->city,
-            'province' => $request->province,
-            'postal_code' => $request->postal_code,
-            'parent_name' => $request->parent_name,
-            'guardian_name' => $request->guardian_name,
-            'parent_guardian_contact' => $request->parent_guardian_contact,
-            'previous_school' => $request->previous_school,
-            'grade_level' => $request->grade_level,
+            'year_level' => $request->grade_level,
             'strand_id' => $request->strand_id,
-            'academic_year' => $request->academic_year,
+            'status' => 'PENDING',
+            'previous_school' => $request->previous_school,
             'report_card_path' => $reportCardPath,
             'good_moral_path' => $goodMoralPath,
             'birth_certificate_path' => $birthCertificatePath,
-            'status' => 'pending'
+        ]);
+        
+        // Create student details record with address and parent information
+        StudentDetail::create([
+            'student_id' => $student->id,
+            'street' => $request->street_address,
+            'city' => $request->city,
+            'province' => $request->province,
+            'postal_code' => $request->postal_code,
+            'father_first_name' => explode(' ', $request->parent_name)[0] ?? null,
+            'father_last_name' => count(explode(' ', $request->parent_name)) > 1 ? explode(' ', $request->parent_name)[1] : null,
+            'guardian_first_name' => $request->guardian_name ? explode(' ', $request->guardian_name)[0] : null,
+            'guardian_last_name' => $request->guardian_name && count(explode(' ', $request->guardian_name)) > 1 ? explode(' ', $request->guardian_name)[1] : null,
+            'guardian_contact_number' => $request->parent_guardian_contact,
         ]);
     
         return redirect()->back()->with('success', 'Your application has been submitted successfully!');
     }
     
-
-    // public function accept($id)
-    // {
-    //     $transferee = Transferee::findOrFail($id);
-
-    //     // Transfer to students table
-    //     $student = new Student();
-    //     $student->full_name = $transferee->full_name;
-    //     $student->email = $transferee->email;
-    //     $student->previous_school = $transferee->previous_school;
-    //     $student->program = $transferee->program;
-    //     $student->strand_id = $transferee->strand_id; // Added to save the strand_id to the student table
-    //     $student->report_card_path = $transferee->report_card_path;
-    //     $student->good_moral_path = $transferee->good_moral_path;
-    //     $student->birth_certificate_path = $transferee->birth_certificate_path;
-    //     $student->created_at = now();
-    //     $student->updated_at = now();
-    //     $student->save();
-
-    //     // Delete from transferee table
-    //     $transferee->delete();
-
-    //     return redirect()->route('admin.transferees.index')->with('success', 'Transferee accepted and moved to students.');
-    // }
-
     public function decline($id)
     {
-        $transferee = Transferee::findOrFail($id);
-
-        // Delete from transferee table
-        $transferee->delete();
+        $student = Student::where('type', 'transferee')->findOrFail($id);
+        
+        // Delete related student details
+        if ($student->details) {
+            $student->details->delete();
+        }
+        
+        // Delete student record
+        $student->delete();
 
         return redirect()->route('admin.transferees.index')->with('success', 'Transferee declined and deleted.');
     }

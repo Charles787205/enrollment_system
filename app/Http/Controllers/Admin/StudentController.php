@@ -63,10 +63,13 @@ class StudentController extends Controller
             'middle_name' => 'nullable|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:students,email',
+            'contact_number' => 'nullable|string|max:20',
             'year_level' => 'required|in:11,12',
             'strand_id' => 'required|exists:strands,id',
             'status' => 'required|string',
             'Sex' => 'required|in:Male,Female',
+            'DateOfBirth' => 'nullable|date',
+            'type' => 'required|in:old,transferee',
             'Address' => 'nullable|string|max:255',
             'SubjectsTaken' => 'nullable|string',
             'clearance_file' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:2048',
@@ -79,10 +82,13 @@ class StudentController extends Controller
             $student->middle_name = $validated['middle_name'];
             $student->last_name = $validated['last_name'];
             $student->email = $validated['email'];
+            $student->contact_number = $request->input('contact_number');
             $student->year_level = $validated['year_level'];
             $student->strand_id = $validated['strand_id'];
             $student->status = $validated['status'];
             $student->Sex = $validated['Sex'];
+            $student->DateOfBirth = $validated['DateOfBirth'];
+            $student->type = $validated['type'];
             $student->Address = $request->input('Address');
             $student->SubjectsTaken = $request->input('SubjectsTaken');
 
@@ -93,6 +99,38 @@ class StudentController extends Controller
             }
 
             $student->save();
+            
+            // Create student details if form contains related fields
+            if ($request->filled('street') || $request->filled('barangay') || 
+                $request->filled('city') || $request->filled('father_first_name')) {
+                $studentDetails = new StudentDetail();
+                $studentDetails->student_id = $student->id;
+                $studentDetails->street = $request->input('street');
+                $studentDetails->barangay = $request->input('barangay');
+                $studentDetails->city = $request->input('city');
+                $studentDetails->province = $request->input('province');
+                $studentDetails->postal_code = $request->input('postal_code');
+                
+                // Parent information
+                $studentDetails->father_first_name = $request->input('father_first_name');
+                $studentDetails->father_middle_name = $request->input('father_middle_name');
+                $studentDetails->father_last_name = $request->input('father_last_name');
+                $studentDetails->father_contact_number = $request->input('father_contact_number');
+                $studentDetails->father_occupation = $request->input('father_occupation');
+                
+                $studentDetails->mother_first_name = $request->input('mother_first_name');
+                $studentDetails->mother_middle_name = $request->input('mother_middle_name');
+                $studentDetails->mother_last_name = $request->input('mother_last_name');
+                $studentDetails->mother_contact_number = $request->input('mother_contact_number');
+                $studentDetails->mother_occupation = $request->input('mother_occupation');
+                
+                $studentDetails->guardian_first_name = $request->input('guardian_first_name');
+                $studentDetails->guardian_last_name = $request->input('guardian_last_name');
+                $studentDetails->guardian_contact_number = $request->input('guardian_contact_number');
+                $studentDetails->guardian_relationship = $request->input('guardian_relationship');
+                
+                $studentDetails->save();
+            }
 
             return redirect()->route('admin.students.index')
                 ->with('success', 'Student created successfully');
@@ -117,13 +155,15 @@ class StudentController extends Controller
             'first_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string|max:255',
             'last_name' => 'required|string|max:255',
-            'date_of_birth' => 'nullable|date',
+            'DateOfBirth' => 'nullable|date',
             'Sex' => 'required|in:Male,Female',
             'email' => 'required|email|unique:students,email,' . $id,
+            'contact_number' => 'nullable|string|max:20',
             'Address' => 'nullable|string|max:255',
             'year_level' => 'required|in:11,12',
             'strand_id' => 'required|exists:strands,id',
             'status' => 'required|string',
+            'previous_school' => 'nullable|string|max:255',
             'SubjectsTaken' => 'nullable|string',
             'clearance_file' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:2048',
         ]);
@@ -132,14 +172,18 @@ class StudentController extends Controller
             $student->first_name = $validated['first_name'];
             $student->middle_name = $validated['middle_name'];
             $student->last_name = $validated['last_name'];
-            $student->DateOfBirth = $validated['date_of_birth'];
+            $student->DateOfBirth = $validated['DateOfBirth'];
             $student->Sex = $validated['Sex'];
             $student->email = $validated['email'];
-            $student->Address = $validated['Address'];
+            $student->contact_number = $request->input('contact_number');
+            // Fix for Address field - use request input instead of validated data
+            $student->Address = $request->input('Address');
             $student->year_level = $validated['year_level'];
             $student->strand_id = $validated['strand_id'];
             $student->status = $validated['status'];
-            $student->SubjectsTaken = $validated['SubjectsTaken'];
+            $student->previous_school = $request->input('previous_school');
+            // Use request input for SubjectsTaken to avoid error if not in validated data
+            $student->SubjectsTaken = $request->input('SubjectsTaken');
 
             // Store clearance file if exists
             if ($request->hasFile('clearance_file')) {
@@ -148,13 +192,52 @@ class StudentController extends Controller
             }
 
             $student->save();
+            
+            // Update or create student details
+            if ($request->filled('street') || $request->filled('barangay') || 
+                $request->filled('city') || $request->filled('father_first_name')) {
+                
+                // Get or create student details
+                $studentDetails = $student->details ?? new \App\Models\StudentDetail(['student_id' => $student->id]);
+                
+                // Update address information
+                $studentDetails->street = $request->input('street');
+                $studentDetails->barangay = $request->input('barangay');
+                $studentDetails->city = $request->input('city');
+                $studentDetails->province = $request->input('province');
+                $studentDetails->postal_code = $request->input('postal_code');
+                
+                // Update parent information
+                $studentDetails->father_first_name = $request->input('father_first_name');
+                $studentDetails->father_middle_name = $request->input('father_middle_name');
+                $studentDetails->father_last_name = $request->input('father_last_name');
+                $studentDetails->father_contact_number = $request->input('father_contact_number');
+                $studentDetails->father_occupation = $request->input('father_occupation');
+                
+                $studentDetails->mother_first_name = $request->input('mother_first_name');
+                $studentDetails->mother_middle_name = $request->input('mother_middle_name');
+                $studentDetails->mother_last_name = $request->input('mother_last_name');
+                $studentDetails->mother_contact_number = $request->input('mother_contact_number');
+                $studentDetails->mother_occupation = $request->input('mother_occupation');
+                
+                $studentDetails->guardian_first_name = $request->input('guardian_first_name');
+                $studentDetails->guardian_last_name = $request->input('guardian_last_name');
+                $studentDetails->guardian_contact_number = $request->input('guardian_contact_number');
+                $studentDetails->guardian_relationship = $request->input('guardian_relationship');
+                
+                // Save student details
+                if (!$studentDetails->exists) {
+                    $studentDetails->student_id = $student->id;
+                }
+                $studentDetails->save();
+            }
 
             return redirect()->route('admin.students.index')
                 ->with('success', 'Student updated successfully');
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->withErrors(['error' => 'Failed to update student. Please try again.']);
+                ->withErrors(['error' => 'Failed to update student. Please try again. ' . $e->getMessage()]);
         }
     }
 
